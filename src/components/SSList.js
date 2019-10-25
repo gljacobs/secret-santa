@@ -1,12 +1,10 @@
 import React from 'react';
 import SSInput from './SSInput'
+import arrayShuffle from 'array-shuffle';
 
 class SSList extends React.Component {
     state = {
-        santas: [
-            { num: 1, name: "Gabriel", reveal: true, secret: "Mariah",},
-            { num: 2, name: "Mariah", reveal: true, secret: "Gabriel",}
-        ],
+        santas: [],
         revealTarget: null,
     }
 
@@ -14,11 +12,35 @@ class SSList extends React.Component {
         this.setState({
             santas: [
                 ...this.state.santas,
-                { num: this.state.santas.length + 1, name: input, reveal: false, secret: null}
+                { num: this.state.santas.length + 1, name: input, secret: ""}
             ],
             value: ""
         })
     }
+    handleShuffleAssign = () => {
+        var assigned = false;
+        var participants = this.state.santas;
+
+        while(!assigned) {
+            var shuffled = arrayShuffle(participants);
+            console.log(shuffled[2].name + ", " + this.state.santas[2].name)
+            for(var i = 0; i < shuffled.length; i++) {
+                if(shuffled[i].name === participants[i].name) {
+                    assigned = false;
+                    i = 100;
+                }
+                else {
+                    participants[i].secret = shuffled[i].name;
+                    assigned = true;
+                }
+            } 
+        }
+        this.setState({
+            santas: participants,
+        })
+    }
+
+
     render() {
         return (
             <div className="container">
@@ -40,14 +62,17 @@ class SSList extends React.Component {
                                     <tr key={row.num}>
                                         <th scope="row">{row.num}</th>
                                         <td>{row.name}</td>
-                                        <td><button type="button" className="btn btn-success float-right btn-sm" onClick={() => this.setState({revealTarget: row.num})} data-toggle="modal" data-target="#exampleModalCenter">Reveal</button></td>
+                                        <td><button type="button" className="btn btn-success float-right btn-sm" onClick={() => this.setState({revealTarget: row})} data-toggle="modal" data-target="#revealModal" disabled={row.secret ? false : true}>REVEAL</button></td>
                                     </tr>
                                 )
                             })
                         }
                     </tbody>
                 </table>
-                <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                
+                <button type="button" className="btn btn-success btn-lg btn-block" onClick={() => this.handleShuffleAssign()}>Do the Secret Santa Shuffle</button>
+
+                <div className="modal fade" id="revealModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -57,7 +82,7 @@ class SSList extends React.Component {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                {this.state.revealTarget ? (this.state.santas[this.state.revealTarget - 1].name + " has " + this.state.santas[this.state.revealTarget - 1].secret + "...") : "..."}
+                                {this.state.revealTarget ? (this.state.revealTarget.name + " has " + this.state.revealTarget.secret + "...") : "..."}
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
