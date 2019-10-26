@@ -70,7 +70,7 @@ class SSList extends React.Component {
                     </tbody>
                 </table>
                 
-                <button type="button" className="btn btn-success btn-lg btn-block" onClick={() => this.handleShuffleAssign()}>Do the Secret Santa Shuffle</button>
+                <button type="button" className="btn btn-success btn-lg btn-block" onClick={() => this.handleShuffleAssign()} disabled={(this.state.santas.length > 2) ? false : true}>Do the Secret Santa Shuffle</button>
 
                 <div className="modal fade" id="revealModal" tabIndex="-1" role="dialog" aria-labelledby="ModalCenterTitle" aria-hidden="true">
                     <div className="modal-dialog modal-dialog-centered" role="document">
