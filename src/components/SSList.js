@@ -10,6 +10,12 @@ class SSList extends React.Component {
 
     handleAddSanta = (input) => {
         var valid = true;
+        console.log(input.length);
+
+        if(!input || input.toUpperCase() === input.toLowerCase()) {
+            valid = false;
+        }
+        
         this.state.santas.map((partic) => {
             if(partic.name === input) {
                 valid = false;
