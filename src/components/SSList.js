@@ -9,13 +9,24 @@ class SSList extends React.Component {
     }
 
     handleAddSanta = (input) => {
-        this.setState({
-            santas: [
-                ...this.state.santas,
-                { num: this.state.santas.length + 1, name: input, secret: ""}
-            ],
-            value: ""
+        var valid = true;
+        this.state.santas.map((partic) => {
+            if(partic.name === input) {
+                valid = false;
+            }
         })
+        if(valid) {
+            this.setState({
+                santas: [
+                    ...this.state.santas,
+                    { num: this.state.santas.length + 1, name: input, secret: ""}
+                ],
+                value: ""
+            });
+        }
+        else {
+            alert("Please enter a unique/valid name.")
+        }
     }
     handleShuffleAssign = () => {
         var assigned = false;
